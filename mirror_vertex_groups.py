@@ -70,6 +70,7 @@ class exVertex:
 #
 # *****************************************************************************
 
+
 class ObjectMirrorVertexGroups(bpy.types.Operator):
     """Object Mirror Vertex groups"""
     bl_idname = "object.mirror_vertexgroups"
@@ -95,7 +96,7 @@ class ObjectMirrorVertexGroups(bpy.types.Operator):
             #Sort the Vertex groups list regardless of the side
             if self.action == 'SORT_SIDE':
                 lst = []
-                error=False
+                error = False
                 for g in self.obj.vertex_groups:
                     s = self.sort_side(g)
                     lst.append((s, g.name))
@@ -104,9 +105,9 @@ class ObjectMirrorVertexGroups(bpy.types.Operator):
                 try:
                     bpy.ops.object.vertex_group_sort(sort_type='NAME')
                 except:
-                     error=True
+                    error = True
                 for g in self.obj.vertex_groups:
-                    for (a,b) in lst:
+                    for (a, b) in lst:
                             if a == g.name:
                                 g.name = b
                                 break
@@ -117,7 +118,7 @@ class ObjectMirrorVertexGroups(bpy.types.Operator):
             #Sort the Vertex groups list accordless to the Z position
             elif self.action == 'SORT_POSITION':
                 lst = []
-                error=False
+                error = False
                 for g in self.obj.vertex_groups:
                     s = self.sort_position(g)
                     lst.append((s, g.name))
@@ -126,9 +127,9 @@ class ObjectMirrorVertexGroups(bpy.types.Operator):
                 try:
                     bpy.ops.object.vertex_group_sort(sort_type='NAME')
                 except:
-                    error=True
+                    error = True
                 for g in self.obj.vertex_groups:
-                    for (a,b) in lst:
+                    for (a, b) in lst:
                             if a == g.name:
                                 g.name = b
                                 break
@@ -141,29 +142,29 @@ class ObjectMirrorVertexGroups(bpy.types.Operator):
                 bpy.ops.object.mode_set(mode='OBJECT')
                 self.liste = self.load_vertex(self.obj)
                 self.find_mirror(self.liste)
-                #Mirror the selected vertex group, if the side is indicated 
+                #Mirror the selected vertex group, if the side is indicated
                 #(Head.L or L_Head or Left Head...)
                 if self.action == 'MIRROR':
                     name = self.obj.vertex_groups.active.name
                     side = self.getSide(name)
                     if (side == 'L') or (side == 'R'):
-                        (nb_g, nb_v) = self.mirroredvertices(side,name)
+                        (nb_g, nb_v) = self.mirroredvertices(side, name)
                         self.report({'INFO'}, '{} vertice(s) mirrored.'.format(nb_v))
-                #Creates a vertex group hat contains all the vertices that do 
+                #Creates a vertex group hat contains all the vertices that do
                 #not have a mirror
                 elif self.action == 'UNM':
                     nb_v = self.unmirroredvertices()
                     self.report({'INFO'}, '{} vertice(s) can not be mirrored.'.format(nb_v))
-                #Mirror all the vertex group from left to right 
+                #Mirror all the vertex group from left to right
                 #(Head-L->Head-R)
                 elif self.action == 'L2R':
                     (nb_g, nb_v) = self.mirroredvertices(self.action)
-                    self.report({'INFO'}, '{0} group(s) and {1} vertice(s) mirrored.'.format(nb_g,nb_v))
-                #Mirror all the vertex group from right to left 
+                    self.report({'INFO'}, '{0} group(s) and {1} vertice(s) mirrored.'.format(nb_g, nb_v))
+                #Mirror all the vertex group from right to left
                 #(HeadRight -> HeadLeft)
                 elif self.action == 'R2L':
                     (nb_g, nb_v) = self.mirroredvertices(self.action)
-                    self.report({'INFO'}, '{0} group(s) and {1} vertice(s) mirrored.'.format(nb_g,nb_v))
+                    self.report({'INFO'}, '{0} group(s) and {1} vertice(s) mirrored.'.format(nb_g, nb_v))
                 else:
                     raise Exception('Unknow action', self.action)
                 if m != 'OBJECT':
@@ -172,7 +173,7 @@ class ObjectMirrorVertexGroups(bpy.types.Operator):
             self.report({'WARNING'}, 'No mesh object selected')
         return {'FINISHED'}
 
-    # Creates the group "Unmirrored_vertices" that contains all the vertices 
+    # Creates the group "Unmirrored_vertices" that contains all the vertices
     #with no mirror vertice
     def unmirroredvertices(self):
         nb_v = 0
@@ -210,14 +211,14 @@ class ObjectMirrorVertexGroups(bpy.types.Operator):
         if s == '?':
             n = '0 ' + n
         else:
-            n='1 ' + self.getName(n) + s
+            n = '1 ' + self.getName(n) + s
         return n
 
     #used to sort the vertex groups accordless to the Z position
     def sort_position(self, item):
         i = item.index
         s = self.getSide(item.name)
-        maxi = sys.float_info.min   
+        maxi = sys.float_info.min
         x, y, z, nb = 0, 0, 0, 0
         for v in self.obj.data.vertices:
             if v.co.z > maxi:
@@ -227,9 +228,9 @@ class ObjectMirrorVertexGroups(bpy.types.Operator):
                     nb += 1
                     x, y, z = x + v.co.x, y + v.co.y, z + v.co.z
                 break
-        if nb > 0:
-            x,y,z = x / nb, y / nb, maxi - (z / nb)
-        n = '{0:0=+10.5f}{1:0=+10.5f}{2:0=+10.5f}'.format(z,x,y)
+        if nb > 01:
+            x, y, z = x / nb, y / nb, maxi - (z / nb)
+        n = '{0:0=+10.5f}{1:0=+10.5f}{2:0=+10.5f}'.format(z, x, y)
         if s == '?':
             n = n + ' '+item.name
         else:
@@ -240,20 +241,20 @@ class ObjectMirrorVertexGroups(bpy.types.Operator):
     def mirroredvertices(self, action, group_name=''):
         nb_v, nb_g = 0, 0
         vg = self.obj.vertex_groups
-        fname = getattr(self.obj,'VG_filter')
+        fname = getattr(self.obj, 'VG_filter')
         for i in range(len(vg)):
             name = getattr(vg[i], 'name')
             if (fname <= ' ') or (fname == '*') or (fname == '%'):
                 filterok = True
             elif (name.find(fname) > 0) or (name.upper().find(fname.upper()) > 0):
                 filterok = True
-            elif (re.match(fname,name)):
+            elif (re.match(fname, name)):
                 filterok = True
-            elif (re.search(fname,name)):
+            elif (re.search(fname, name)):
                 filterok = True
             else:
                 filterok = False
-            if (name > ' ') and (filterok) and ((name == group_name) or (group_name == '')): #filter test
+            if (name > ' ') and (filterok) and ((name == group_name) or (group_name == '')):
                 side = self.getSide(name)
                 if side == action[0]:
                     invname = self.getFlippedName(name)
@@ -264,12 +265,12 @@ class ObjectMirrorVertexGroups(bpy.types.Operator):
                             vg.remove(vg[index_dest])
                         vg.new(name=invname)
                         nb_g += 1
-                        nb_v += self.copyVerts(name,invname)
+                        nb_v += self.copyVerts(name, invname)
         return (nb_g, nb_v)
 
     #Copy the source vertex group to dest.Return the number or vertices mirrored
     def copyVerts(self, source, dest):
-        nb =  0
+        nb = 0
         vg = self.obj.vertex_groups
         index_source = self.getIndex(vg, source)
         index_dest = self.getIndex(vg, dest)
@@ -284,7 +285,7 @@ class ObjectMirrorVertexGroups(bpy.types.Operator):
                             break
         return nb
 
-    #Return the side of the vertex group according to its name 
+    #Return the side of the vertex group according to its name
     #getSide(Head.L)->L)
     def getSide(self, oname):
         side = '?'
@@ -306,7 +307,7 @@ class ObjectMirrorVertexGroups(bpy.types.Operator):
             side = 'R'
         return side
 
-    #Return the name of the vertex group without the side 
+    #Return the name of the vertex group without the side
     #(getName(Head.L)->Head)
     def getName(self, oname):
         name = '?'
@@ -468,7 +469,7 @@ class ObjectMirrorVertexGroups(bpy.types.Operator):
                             v.mirror_index = vm.index
                             nb_inconnus = nb_inconnus - 2
 
-    # Return the flippedName. 
+    # Return the flippedName.
     #For example :  getFlippedName('Hand.L') returns 'Hand.R'
     def getFlippedName(self, oname):
         nname = '?'
