@@ -34,9 +34,10 @@ bl_info = {
 }
 
 import bpy
-import mathutils
 import sys
+import mathutils
 import re
+import unittest
 
 MIN = 0.0001
 
@@ -228,7 +229,7 @@ class ObjectMirrorVertexGroups(bpy.types.Operator):
                     nb += 1
                     x, y, z = x + v.co.x, y + v.co.y, z + v.co.z
                 break
-        if nb > 01:
+        if nb > 1:
             x, y, z = x / nb, y / nb, maxi - (z / nb)
         n = '{0:0=+10.5f}{1:0=+10.5f}{2:0=+10.5f}'.format(z, x, y)
         if s == '?':
@@ -573,6 +574,7 @@ class ObjectMirrorVertexGroups(bpy.types.Operator):
             nname = oname[:-5] + 'left'
         return nname
 
+        
 # *****************************************************************************
 # INTERFACE
 # *****************************************************************************
