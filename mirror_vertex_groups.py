@@ -146,11 +146,12 @@ class ObjectMirrorVertexGroups(bpy.types.Operator):
                 #Mirror the selected vertex group, if the side is indicated
                 #(Head.L or L_Head or Left Head...)
                 if self.action == 'MIRROR':
-                    name = self.obj.vertex_groups.active.name
-                    side = self.getSide(name)
-                    if (side == 'L') or (side == 'R'):
-                        (nb_g, nb_v) = self.mirroredvertices(side, name)
-                        self.report({'INFO'}, '{} vertice(s) mirrored.'.format(nb_v))
+                    if self.obj.vertex_groups.active is not None:
+                        name = self.obj.vertex_groups.active.name
+                        side = self.getSide(name)
+                        if (side == 'L') or (side == 'R'):
+                            (nb_g, nb_v) = self.mirroredvertices(side, name)
+                            self.report({'INFO'}, '{} vertice(s) mirrored.'.format(nb_v))
                 #Creates a vertex group hat contains all the vertices that do
                 #not have a mirror
                 elif self.action == 'UNM':
@@ -574,7 +575,7 @@ class ObjectMirrorVertexGroups(bpy.types.Operator):
             nname = oname[:-5] + 'left'
         return nname
 
-        
+
 # *****************************************************************************
 # INTERFACE
 # *****************************************************************************
@@ -595,7 +596,7 @@ class DataPanel(bpy.types.Panel):
         self.filter = bpy.props.StringProperty()
 
         # Create a simple row.
-        layout.prop(context.active_object, "VG_filter", text="Filter:", text_ctxt="")
+        layout.prop(context.active_object, "VG_filter", text="Filter:")
         row = layout.row(align=True)
         row.operator("object.mirror_vertexgroups", text='From left to right').action = 'L2R'
         row.operator("object.mirror_vertexgroups", text='From right to left').action = 'R2L'
